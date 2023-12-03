@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 const feedRoutes = require("./routes/feed");
 
@@ -20,5 +21,14 @@ app.use((req, res, next) => {
 
 app.use("/feed", feedRoutes);
 
-app.listen(8080);
-console.log("App Started");
+mongoose
+  .connect(
+    "mongodb+srv://akuna444:lYlyqPjkwCsbU51A@cluster0.ex41jje.mongodb.net/shop"
+  )
+  .then((result) => {
+    app.listen(8080);
+    console.log("App Started");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
