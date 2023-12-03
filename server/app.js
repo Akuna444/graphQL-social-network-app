@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const path = require("path");
 
 const feedRoutes = require("./routes/feed");
-const { error } = require("console");
 
 const app = express();
 
