@@ -12,6 +12,10 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
+    imageUrl: {
+      type: String,
+      required: true,
+    },
     creator: {
       type: Object,
       required: true,

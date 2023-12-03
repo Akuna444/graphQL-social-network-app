@@ -23,7 +23,7 @@ app.use("/feed", feedRoutes);
 
 mongoose
   .connect(
-    "mongodb+srv://akuna444:lYlyqPjkwCsbU51A@cluster0.ex41jje.mongodb.net/shop"
+    "mongodb+srv://akuna444:lYlyqPjkwCsbU51A@cluster0.ex41jje.mongodb.net/social-net"
   )
   .then((result) => {
     app.listen(8080);
