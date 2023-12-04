@@ -22,6 +22,7 @@ class SinglePost extends Component {
         return res.json();
       })
       .then((resData) => {
+        console.log(resData.post.imageUrl);
         this.setState({
           title: resData.post.title,
           author: resData.post.creator.name,
@@ -29,6 +30,7 @@ class SinglePost extends Component {
           date: new Date(resData.post.createdAt).toLocaleDateString("en-US"),
           content: resData.post.content,
         });
+        console.log(this.state.image);
       })
       .catch((err) => {
         console.log(err);
