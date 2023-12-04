@@ -19,5 +19,13 @@ router.post(
 );
 
 router.get("/posts/:postId", feedController.getPost);
+router.put(
+  "/posts/:postId",
+  [
+    body("title").isLength({ min: 6, max: 20 }).isString().trim(),
+    body("content").isLength({ min: 5, max: 20 }),
+  ],
+  feedController.updatePost
+);
 
 module.exports = router;
