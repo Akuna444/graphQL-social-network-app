@@ -30,3 +30,23 @@ exports.signup = (req, res, next) => {
       });
     });
 };
+
+exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        const error = new Error("No user found with this email");
+        error.statusCode = 401;
+        throw error;
+      }
+      return bcrypt.compare(password, user.password);
+    })
+    .then((isEqual) => {
+      if (!isEqual) {
+        const error = new Error("Wrong password!");
+        error.statusCode = 401;
+        throw error;
+      }
+    });
+};
