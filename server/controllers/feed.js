@@ -5,14 +5,23 @@ const fs = require("fs");
 const { validationResult } = require("express-validator");
 
 exports.getPosts = (req, res, next) => {
-  Post.find().then((posts) => {
-    if (!posts) {
-      const error = new Error("Could not fetch posts!");
-      error.statusCode = 404;
-      throw error;
-    }
-    res.status(200).json({ message: "Posts successfully fetched!", posts });
-  });
+  const currentPage = req.query.page || 1;
+  const perPage = 2;
+  let totalItems;
+
+  Post.find()
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return Post.find()
+        .skip((currentPage - 1) * perPage)
+        .limit(perPage);
+    })
+    .then((posts) => {
+      res
+        .status(200)
+        .json({ message: "Post successfully fetched", posts, totalItems });
+    });
 };
 
 exports.createPost = (req, res, next) => {
