@@ -62,6 +62,7 @@ class Feed extends Component {
         return res.json();
       })
       .then((resData) => {
+        console.log(resData);
         this.setState({
           posts: resData.posts.map((post) => {
             return {
@@ -263,6 +264,7 @@ class Feed extends Component {
               lastPage={Math.ceil(this.state.totalPosts / 2)}
               currentPage={this.state.postPage}
             >
+              {console.log(this.state.posts)}
               {this.state.posts.map((post) => (
                 <Post
                   key={post._id}
