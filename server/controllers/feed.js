@@ -1,4 +1,5 @@
 const Post = require("../models/post");
+const User = require("../models/user");
 
 const path = require("path");
 const fs = require("fs");
@@ -18,6 +19,7 @@ exports.getPosts = (req, res, next) => {
         .limit(perPage);
     })
     .then((posts) => {
+      console.log(posts);
       res
         .status(200)
         .json({ message: "Post successfully fetched", posts, totalItems });
@@ -41,21 +43,32 @@ exports.createPost = (req, res, next) => {
     throw err;
   }
 
-  console.log(req.file);
+  console.log(req.userId);
   const post = new Post({
     title,
     content,
     imageUrl: "images/" + req.file.filename,
-    creator: {
-      name: "Akuna444",
-    },
+    creator: req.userId,
   });
   post
     .save()
     .then((result) => {
+      return User.findById(req.userId);
+    })
+    .then((user) => {
+      if (!user) {
+        const error = new Error("No user found!");
+        error.statusCode = 422;
+        throw error;
+      }
+      user.posts.push(post);
+      return user.save();
+    })
+    .then((result) => {
       res.status(201).json({
         message: "Post created successfully!",
-        post: result,
+        post: post,
+        creator: { _id: result._id, name: result.name },
       });
     })
     .catch((err) => next(err));
@@ -107,6 +120,11 @@ exports.updatePost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
+      if (post.creator.toString() !== req.userId) {
+        const error = new Error("Unauthorized");
+        error.statusCode = 403;
+        throw error;
+      }
 
       if (imageUrl !== post.imageUrl) {
         clearImage(post.imageUrl);
@@ -133,13 +151,19 @@ exports.deletePost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
+      if (post.creator.toString() !== req.userId) {
+        const error = new Error("Unauthorized");
+        error.statusCode = 403;
+        throw error;
+      }
       clearImage(post.imageUrl);
       return Post.findByIdAndDelete(postId);
     })
     .then((result) => {
       console.log(result);
       res.status(200).json({ message: "Deleted successfully" });
-    });
+    })
+    .catch((err) => next(err));
 };
 const clearImage = (filePath) => {
   filePath = path.join(__dirname, "..", filePath);
