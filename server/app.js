@@ -66,7 +66,14 @@ mongoose
     "mongodb+srv://akuna444:lYlyqPjkwCsbU51A@cluster0.ex41jje.mongodb.net/social-net"
   )
   .then((result) => {
-    app.listen(8080);
+    const server = app.listen(8080);
+
+    const io = require("./socket").init(server);
+
+    io.on("connection", (socket) => {
+      console.log("client connected successfully");
+    });
+
     console.log("App Started");
   })
   .catch((err) => {

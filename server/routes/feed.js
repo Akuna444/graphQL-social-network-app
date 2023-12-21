@@ -15,7 +15,8 @@ router.post(
   [
     body("title").isLength({ min: 6, max: 20 }).isString().trim(),
     body("content").isLength({ min: 5, max: 20 }),
-  ], isAuth,
+  ],
+  isAuth,
   feedController.createPost
 );
 
@@ -25,7 +26,8 @@ router.put(
   [
     body("title").isLength({ min: 6, max: 20 }).isString().trim(),
     body("content").isLength({ min: 5, max: 20 }),
-  ], isAuth,
+  ],
+  isAuth,
   feedController.updatePost
 );
 
