@@ -4,9 +4,6 @@ const mongoose = require("mongoose");
 const path = require("path");
 const multer = require("multer");
 
-const feedRoutes = require("./routes/feed");
-const authRoutes = require("./routes/auth");
-
 const app = express();
 
 const fileStorage = multer.diskStorage({
@@ -49,9 +46,6 @@ app.use((req, res, next) => {
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 
-app.use("/feed", feedRoutes);
-app.use("/auth", authRoutes);
-
 app.use((error, req, res, next) => {
   const statusCode = error?.statusCode || 500;
   const message = error.message;
@@ -66,14 +60,7 @@ mongoose
     "mongodb+srv://akuna444:lYlyqPjkwCsbU51A@cluster0.ex41jje.mongodb.net/social-net"
   )
   .then((result) => {
-    const server = app.listen(8080);
-
-    const io = require("./socket").init(server);
-
-    io.on("connection", (socket) => {
-      console.log("client connected successfully");
-    });
-
+    app.listen(8080);
     console.log("App Started");
   })
   .catch((err) => {
